@@ -1,8 +1,8 @@
 # author : Wenshuai Hou
 # email  : wenhoujx@gmail.com
 
-from pylab import *
 import matplotlib as plt
+from pylab import *
 import collections
 import copy
 import pdb
@@ -47,7 +47,7 @@ def clustering(data, medoids):
 
             if(min_d > tmp_d):
                 best_med_it_belongs_to = i
-                min_d = tmp_d
+                min_d                  = tmp_d
 
         medoids[best_med_it_belongs_to].append(j)
 
@@ -56,9 +56,9 @@ def total_cost(data, medoids):
     '''
     compute the total cost based on current setting.
     '''
-    med_idx =  medoids[-1];
-    k = len(med_idx);
-    cost = 0.0;
+    med_idx = medoids[-1];
+    k       = len(med_idx);
+    cost    = 0.0;
     
     for i in range(k):
         med = data[med_idx[i]]
@@ -77,25 +77,28 @@ def kmedoids( data, k):
     # tmp_medoids is cur_medoids swapped only one pair of medoid and non-medoid data point. 
     # best_medoids is the best tmp_medoids through all possible swaps. 
 
-    N = len(data)
-    cur_medoids = {}
+    N               = len(data)
+    cur_medoids     = {}
     cur_medoids[-1] = range(k)
     clustering(data, cur_medoids)
     total_cost(data, cur_medoids)
-    old_medoids = {}
+    old_medoids     = {}
     old_medoids[-1] = []
     
+    iter_counter = 0
     # stop if not improvement.
     while not set(old_medoids[-1]) == set(cur_medoids[-1]):
+        print 'iteration couter:' , iter_counter
+        iter_counter = iter_counter + 1 
         best_medoids = copy.deepcopy(cur_medoids)
-        old_medoids = copy.deepcopy(cur_medoids)
+        old_medoids  = copy.deepcopy(cur_medoids)
         # pdb.set_trace()
         # iterate over all medoids and non-medoids
         for i in range(N):
             for j in range(k):
                 if not i ==j :
                     # swap only a pair
-                    tmp_medoids = copy.deepcopy(cur_medoids)
+                    tmp_medoids        = copy.deepcopy(cur_medoids)
                     tmp_medoids[-1][j] = i
 
                     clustering(data, tmp_medoids)
@@ -109,7 +112,7 @@ def kmedoids( data, k):
 
 if __name__ =='__main__':
     dim = 2
-    N = 50
+    N = 100
 
     # create datas with different normal distributions.
     d1 = np.random.normal(1, .2, (N,dim))
@@ -127,6 +130,6 @@ if __name__ =='__main__':
     scatter( data[medoids[-1], 0],data[medoids[-1], 1] , marker = 'x' , s = 100)
     print medoids
     # scatter( d1[:,0], d1[:,1], c = 'r')
-    show()
+    savefig('kmedoids.png')
 
 
