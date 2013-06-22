@@ -8,3 +8,9 @@ before changing, 30s to run N = 50
 after changing, 23s for N = 50
 
 change the function in clustering(), now everything is super fast. I can even train on N = 1000
+
+
+Sat Jun 22 00:33:49 EDT 2013
+add the kmeans code using the scikit-learn toolbox. The result is good, runs fast, easy to scale. It seems they don't have the k-medoids() functions built-in.
+
+
