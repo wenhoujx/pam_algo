@@ -115,7 +115,7 @@ if __name__ =='__main__':
     scatter( data[medoids[1], 0] ,data[medoids[1], 1], c = 'g') 
     scatter( data[medoids[2], 0] ,data[medoids[2], 1], c = 'y') 
     scatter( data[medoids[-1], 0],data[medoids[-1], 1] , marker = 'x' , s = 500)
-    # show()
+    show()
     savefig('kmedoids.png')
 
 
