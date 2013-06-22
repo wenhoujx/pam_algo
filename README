@@ -1,3 +1,10 @@
 this is an implementation of PAM K-medoids algorithm based on the wiki papge. 
 Tue Jun 18 14:07:53 EDT 2013
 ---------------------------------------------
+Fri Jun 21 20:16:50 EDT 2013
+
+Rewrite the total_cost() function with scipy.spatial.distance.cdist() fucntion, which is way faster than the stupid loop I wrote. 
+before changing, 30s to run N = 50
+after changing, 23s for N = 50
+
+change the function in clustering(), now everything is super fast. I can even train on N = 1000

@@ -7,6 +7,7 @@ import collections
 import copy
 import pdb
 import numpy as np
+from scipy.spatial.distance import cdist
 import random
 
 '''
@@ -23,34 +24,14 @@ def clustering(data, medoids):
     
     # pdb.set_trace()
     med_idx = medoids[-1]
+    med  = data[med_idx]
     k       = len(med_idx)
     
-    # initialize each one with an empty list.
+
+    dis = cdist(data, med)
+    best_med_it_belongs_to = dis.argmin(axis = 1)
     for i in range(k):
-        medoids[i] = []
-
-    min_d                  = float('inf')
-    tmp_d                  = 0.0
-    best_med_it_belongs_to = 0
-
-    # for each element 
-    for j in range(len(data)):
-        element = data[j]
-        min_d = float('inf')
-
-        # for each medoid
-        for i in range(k):
-            med = data[med_idx[i]]
-            # compute euclidean distance.
-            tmp_d = np.linalg.norm(med - element)
-            # pdb.set_trace()
-
-            if(min_d > tmp_d):
-                best_med_it_belongs_to = i
-                min_d                  = tmp_d
-
-        medoids[best_med_it_belongs_to].append(j)
-
+        medoids[i] =where(best_med_it_belongs_to == i)
 
 def total_cost(data, medoids):
     '''
@@ -59,12 +40,17 @@ def total_cost(data, medoids):
     med_idx = medoids[-1];
     k       = len(med_idx);
     cost    = 0.0;
+
+    med = data[ med_idx] 
+    dis = cdist( data, med, 'euclidean') 
+    cost = dis.min(axis = 1).sum()
     
-    for i in range(k):
-        med = data[med_idx[i]]
-        for j in medoids[i]:
-            cost = cost + np.linalg.norm(med - data[j])
-    
+    # rewrite using the cdist() function, which should be way faster
+    # for i in range(k):
+    #     med = data[med_idx[i]]
+    #     for j in medoids[i]:
+    #         cost = cost + np.linalg.norm(med - data[j])
+    # 
     medoids[-2] = [cost]
 
 
@@ -85,7 +71,7 @@ def kmedoids( data, k):
     old_medoids     = {}
     old_medoids[-1] = []
     
-    iter_counter = 0
+    iter_counter = 1
     # stop if not improvement.
     while not set(old_medoids[-1]) == set(cur_medoids[-1]):
         print 'iteration couter:' , iter_counter
@@ -107,12 +93,13 @@ def kmedoids( data, k):
                     if( best_medoids[-2] > tmp_medoids[-2]):
                         best_medoids = copy.deepcopy(tmp_medoids)
         cur_medoids = copy.deepcopy(best_medoids)
+        print 'current total cost is ', cur_medoids[-2]
     return cur_medoids
 
 
 if __name__ =='__main__':
     dim = 2
-    N = 100
+    N =1000 
 
     # create datas with different normal distributions.
     d1 = np.random.normal(1, .2, (N,dim))
@@ -127,9 +114,8 @@ if __name__ =='__main__':
     scatter( data[medoids[0], 0] ,data[medoids[0], 1], c = 'r') 
     scatter( data[medoids[1], 0] ,data[medoids[1], 1], c = 'g') 
     scatter( data[medoids[2], 0] ,data[medoids[2], 1], c = 'y') 
-    scatter( data[medoids[-1], 0],data[medoids[-1], 1] , marker = 'x' , s = 100)
-    print medoids
-    # scatter( d1[:,0], d1[:,1], c = 'r')
+    scatter( data[medoids[-1], 0],data[medoids[-1], 1] , marker = 'x' , s = 500)
+    # show()
     savefig('kmedoids.png')
 
 
